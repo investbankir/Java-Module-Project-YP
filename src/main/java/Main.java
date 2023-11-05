@@ -3,31 +3,17 @@ import java.util.Scanner;
 public class Main {
     public static void main(String[] args) {
         System.out.println("На скольких человек необходимо разделить счёт?");
-        Scanner sc = new Scanner(System.in);
-        int guests = 0;
+
+        PeopleCounter counter = new PeopleCounter();
+        int peopleCount = counter.countPeople();
+
+
         double total = 0.00;
-        double price = 0.00;
+        double price;
         String list = "";
 
+        Scanner sc = new Scanner(System.in);
 
-        while (true) {
-            if (sc.hasNextInt()) {
-                int quantity = sc.nextInt();
-                if (quantity > 1) {
-                    System.out.println("Отлично! Теперь мы сможем сделать расчёт!");
-                    guests = quantity;
-                    sc.nextLine();
-                    break;
-                } else if (quantity == 1) {
-                    System.out.println("Счёт на 1 человека ты и сам разделишь ;-) Попробуем снова?");
-                } else if (quantity < 1) {
-                    System.out.println("Введено 0 или отрицательное значение, попробуйте ещё раз");
-                }
-            } else {
-                System.out.println("Введенно ошибочное значение. Пожалуйста, введите корректное количество гостей");
-            }
-            sc.nextLine();
-        }
 
         while (true) {
             System.out.println("Если хотите добавить блюдо, то ведите его название либо \"Закончить\" для завершения");
@@ -36,7 +22,21 @@ public class Main {
                 break;
             }
             System.out.println("Введите стоимость блюда в формате \"Рубли,копейки\":");
-            price = sc.nextDouble();
+            while (true) {
+                if (sc.hasNextDouble()){
+                    price = sc.nextDouble();
+                    if (price <= 0) {
+                        System.out.println("Введите число больше \"0\"");
+                        sc.nextLine();
+                    } else {
+                        break;
+                    }
+                } else {
+                    System.out.println("Введено не допустимое значение, повторите ввод");
+                    sc.next();
+                }
+            }
+
 
             System.out.println("Вы успешно добавили новое блюдо");
             total += price;
@@ -50,7 +50,7 @@ public class Main {
         System.out.println("Добавленные товары:\n" + list);
         System.out.println("Итого: " + formatPrice(total));
 
-        double split = total / guests;
+        double split = total / peopleCount;
         System.out.println("Сумма на одного гостя: " + formatPrice(split));
 
         sc.close();
@@ -72,4 +72,4 @@ public class Main {
 
         return rubles + " " + rubleWord + " " + kopecks + " коп.";
     }
-  }
+}
